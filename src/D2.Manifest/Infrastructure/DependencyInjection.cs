@@ -18,6 +18,7 @@ public static class DependencyInjection
     
     private static IServiceCollection AddScopedServices(this IServiceCollection services)
     {
+        services.AddSingleton<IManifestApp, ManifestApp>();
         services.AddScoped<IManifestHttpClient, ManifestHttpClient>();
         services.AddScoped<IManifestIOClient, ManifestIOClient>();
         return services;

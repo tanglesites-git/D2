@@ -1,8 +1,8 @@
 ﻿using D2.Manifest.Application;
 
-namespace D2.Manifest;
+namespace D2.Manifest.Infrastructure;
 
-public class ManifestApp
+public class ManifestApp : IManifestApp
 {
     private readonly IManifestHttpClient _httpClient;
     private readonly IManifestIOClient _ioClient;
