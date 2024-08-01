@@ -1,11 +1,12 @@
-﻿using D2.Manifest.Domain;
+﻿using System.Text.Encodings.Web;
+using D2.Manifest.Domain;
 using System.Text.Json;
 
 namespace D2.Manifest.Tests;
 
 public class TestManifestPropertiesTransforms
 {
-    private readonly ManifestRoot _json;
+    private readonly ManifestRoot? _json;
     private const string filename = @"A:\Projects\D2\test\D2.Manifest.Tests\manifest.json";
 
     private readonly List<string> _mobileWorldContentPaths =
@@ -27,16 +28,19 @@ public class TestManifestPropertiesTransforms
 
     public TestManifestPropertiesTransforms()
     {
-        using (var stream = File.OpenRead(filename))
+        var jsonString = File.ReadAllText(filename);
+        _json = JsonSerializer.Deserialize(jsonString, typeof(ManifestRoot), new JsonSerializerOptions
         {
-            _json = JsonSerializer.DeserializeAsync(stream, ManifestRootContext.Default.ManifestRoot).Result!;
-        }
+            TypeInfoResolver = ManifestRootContext.Default,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            IncludeFields = true
+        }) as ManifestRoot;
     }
 
     [Fact]
     public void TestManifestRootHasVersion()
     {
-        Assert.Equal("226893.24.07.17.1731-2-bnet.56363", _json.Response.Version);
+        Assert.Equal("226893.24.07.17.1731-2-bnet.56363", _json?.Response.Version);
     }
 
     [Fact]
@@ -48,91 +52,122 @@ public class TestManifestPropertiesTransforms
     [Fact]
     public void TestManifestResponseIsNotNull()
     {
-        Assert.NotNull(_json.Response);
+        Assert.NotNull(_json?.Response);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsIsNotNull()
     {
-        Assert.NotNull(_json.Response.MobileWorldContentPaths);
+        Assert.NotNull(_json?.Response.MobileWorldContentPaths);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasEn()
     {
-        Assert.Equal(_mobileWorldContentPaths[0], _json.Response.MobileWorldContentPaths.En);
+        Assert.Equal(_mobileWorldContentPaths[0], _json?.Response.MobileWorldContentPaths.En);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasFr()
     {
-        Assert.Equal(_mobileWorldContentPaths[1], _json.Response.MobileWorldContentPaths.Fr);
+        Assert.Equal(_mobileWorldContentPaths[1], _json?.Response.MobileWorldContentPaths.Fr);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasEs()
     {
-        Assert.Equal(_mobileWorldContentPaths[2], _json.Response.MobileWorldContentPaths.Es);
+        Assert.Equal(_mobileWorldContentPaths[2], _json?.Response.MobileWorldContentPaths.Es);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasEsMx()
     {
-        Assert.Equal(_mobileWorldContentPaths[3], _json.Response.MobileWorldContentPaths.EsMx);
+        Assert.Equal(_mobileWorldContentPaths[3], _json?.Response.MobileWorldContentPaths.EsMx);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasDe()
     {
-        Assert.Equal(_mobileWorldContentPaths[4], _json.Response.MobileWorldContentPaths.De);
+        Assert.Equal(_mobileWorldContentPaths[4], _json?.Response.MobileWorldContentPaths.De);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasIt()
     {
-        Assert.Equal(_mobileWorldContentPaths[5], _json.Response.MobileWorldContentPaths.It);
+        Assert.Equal(_mobileWorldContentPaths[5], _json?.Response.MobileWorldContentPaths.It);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasJa()
     {
-        Assert.Equal(_mobileWorldContentPaths[6], _json.Response.MobileWorldContentPaths.Ja);
+        Assert.Equal(_mobileWorldContentPaths[6], _json?.Response.MobileWorldContentPaths.Ja);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasPtBr()
     {
-        Assert.Equal(_mobileWorldContentPaths[7], _json.Response.MobileWorldContentPaths.PtBr);
+        Assert.Equal(_mobileWorldContentPaths[7], _json?.Response.MobileWorldContentPaths.PtBr);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasRu()
     {
-        Assert.Equal(_mobileWorldContentPaths[8], _json.Response.MobileWorldContentPaths.Ru);
+        Assert.Equal(_mobileWorldContentPaths[8], _json?.Response.MobileWorldContentPaths.Ru);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasPl()
     {
-        Assert.Equal(_mobileWorldContentPaths[9], _json.Response.MobileWorldContentPaths.Pl);
+        Assert.Equal(_mobileWorldContentPaths[9], _json?.Response.MobileWorldContentPaths.Pl);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasKo()
     {
-        Assert.Equal(_mobileWorldContentPaths[10], _json.Response.MobileWorldContentPaths.Ko);
+        Assert.Equal(_mobileWorldContentPaths[10], _json?.Response.MobileWorldContentPaths.Ko);
     }
 
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasZhCht()
     {
-        Assert.Equal(_mobileWorldContentPaths[11], _json.Response.MobileWorldContentPaths.ZhCht);
+        Assert.Equal(_mobileWorldContentPaths[11], _json?.Response.MobileWorldContentPaths.ZhCht);
     }
 
     [Fact]
     public void TestManifestMobileWorldContentPathsHasZhChs()
     {
-        Assert.Equal(_mobileWorldContentPaths[12], _json.Response.MobileWorldContentPaths.ZhChs);
+        Assert.Equal(_mobileWorldContentPaths[12], _json?.Response.MobileWorldContentPaths.ZhChs);
+    }
+    
+    [Fact]
+    public void TestManifestJsonWorldComponentContentPathsIsNotNull()
+    {
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths);
+    }
+    
+    [Fact]
+    public void TestManifestJsonWorldComponentContentPathsLocalizationIsNotNull()
+    {
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.En);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.Fr);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.Es);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.EsMx);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.De);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.It);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.Ja);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.PtBr);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.Ru);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.Pl);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.Ko);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.ZhCht);
+        Assert.NotNull(_json?.Response.JsonWorldComponentContentPaths.ZhChs);
+    }
+    
+    [Fact]
+    public void TestManifestJsonWorldComponentContentPathsAreNotAnEmptyString()
+    {
+        Assert.False(string.IsNullOrEmpty(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyNodeStepSummaryDefinition));
+        Assert.False(string.IsNullOrEmpty(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyInventoryItemDefinition));
     }
 }

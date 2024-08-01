@@ -20,3 +20,9 @@ public partial class ManifestMobileWorldContentPathsContext : JsonSerializerCont
 {
     
 }
+
+[JsonSerializable(typeof(ManifestJsonWorldComponentContentPaths))]
+public partial class ManifestJsonWorldComponentContentPathsContext : JsonSerializerContext
+{
+    
+}
