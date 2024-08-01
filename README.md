@@ -19,6 +19,8 @@ A Destiny2 System
         -- Console
         -- RazorClient
         -- BlazorClient
+-- tests
+-- becnhmarks
 ```
 
 > I am testing this out. My intuition is that this will produce less duplication in the long run.
