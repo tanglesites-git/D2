@@ -20,4 +20,6 @@ public class ManifestResponse
 {
     [JsonPropertyName("version")]
     public string Version { get; set; } = string.Empty;
+    [JsonPropertyName("mobileWorldContentPaths")]
+    public ManifestMobileWorldContentPaths MobileWorldContentPaths { get; set; } = new();
 }

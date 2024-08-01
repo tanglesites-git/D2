@@ -14,3 +14,9 @@ public partial class ManifestResponseContext : JsonSerializerContext
 {
     
 }
+
+[JsonSerializable(typeof(ManifestMobileWorldContentPaths))]
+public partial class ManifestMobileWorldContentPathsContext : JsonSerializerContext
+{
+    
+}
