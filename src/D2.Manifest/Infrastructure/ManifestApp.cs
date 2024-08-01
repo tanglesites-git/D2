@@ -1,7 +1,5 @@
-﻿using System.Text;
-using System.Text.Encodings.Web;
+﻿using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using D2.Manifest.Application;
 using D2.Manifest.Domain;
 
@@ -11,6 +9,8 @@ public class ManifestApp : IManifestApp
 {
     private readonly IManifestHttpClient _httpClient;
     private readonly IManifestIOClient _ioClient;
+    private const string DataRootDirectory = @"A:\Projects\D2\Data";
+    private const string InventoryItemDefinition = "DestinyInventoryItemDefinition.json";
 
     public ManifestApp(IManifestHttpClient httpClient, IManifestIOClient ioClient)
     {
@@ -22,7 +22,6 @@ public class ManifestApp : IManifestApp
     {
         var manifestString = await _httpClient.GetManifestAsync();
         await _ioClient.WriteManifestAsync(manifestString);
-        // var _json = JsonSerializer.Deserialize<ManifestRoot>(manifestString);
         var _json = JsonSerializer.Deserialize(manifestString, typeof(ManifestRoot), new JsonSerializerOptions
         {
             TypeInfoResolver = ManifestRootContext.Default,
@@ -30,15 +29,28 @@ public class ManifestApp : IManifestApp
             IncludeFields = true
             
         }) as ManifestRoot;
-        var jsonString = JsonSerializer.Serialize(_json, typeof(ManifestRoot), new JsonSerializerOptions
+        var urlList = new List<Task>
         {
-            TypeInfoResolver = ManifestRootContext.Default,
-            WriteIndented = true,
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            IncludeFields = true
-        });
-        Console.WriteLine(jsonString);
-        Console.WriteLine(_json);
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyInventoryItemDefinition!, "DestinyInventoryItemDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyStatDefinition!, "DestinyStatDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyCollectibleDefinition!, "DestinyCollectibleDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyDamageTypeDefinition!, "DestinyDamageTypeDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyLoreDefinition!, "DestinyLoreDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyEquipmentSlotDefinition!, "DestinyEquipmentSlotDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyPlugSetDefinition!, "DestinyPlugSetDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinySocketCategoryDefinition!, "DestinySocketCategoryDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyItemCategoryDefinition!, "DestinyItemCategoryDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinySeasonDefinition!, "DestinySeasonDefinition.json"),
+            GetJsonResource(_json?.Response.JsonWorldComponentContentPaths.En?.DestinyTraitDefinition!, "DestinyTraitDefinition.json"),
+        };
+
+        await Task.WhenAll(urlList);
+    }
+
+    private async Task GetJsonResource(string url, string filename)
+    {
+        var json = await _httpClient.GetJsonDefinitionAsync(url);
+        await _ioClient.WriteJsonDefinitionAsync(json, Path.Combine(DataRootDirectory, filename));
     }
 }
 

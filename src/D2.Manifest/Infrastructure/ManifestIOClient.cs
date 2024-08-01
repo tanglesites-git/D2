@@ -6,6 +6,7 @@ namespace D2.Manifest.Infrastructure;
 public class ManifestIOClient : IManifestIOClient
 {
     private const string ManifestFileName = "manifest.json";
+    private const string DataRootDirectory = @"A:\Projects\D2\Data";
     private readonly ILogger<ManifestIOClient> _logger;
 
     public ManifestIOClient(ILogger<ManifestIOClient> logger)
@@ -15,11 +16,21 @@ public class ManifestIOClient : IManifestIOClient
 
     public async Task WriteManifestAsync(string manifest)
     {
-        if (Path.Exists(ManifestFileName))
+        if (Path.Exists(Path.Combine(DataRootDirectory, ManifestFileName)))
         {
             _logger.LogInformation("Manifest file already exists. Skipping write");
             return;
         }
-        await File.WriteAllTextAsync(ManifestFileName, manifest);
+        await File.WriteAllTextAsync(Path.Combine(DataRootDirectory, ManifestFileName), manifest);
+    }
+    
+    public async Task WriteJsonDefinitionAsync(string json, string fileName)
+    {
+        if (Path.Exists(fileName))
+        {
+            _logger.LogInformation("Json file already exists. Skipping write");
+            return;
+        }
+        await File.WriteAllTextAsync(fileName, json);
     }
 }
