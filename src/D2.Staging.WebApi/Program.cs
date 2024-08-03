@@ -1,3 +1,4 @@
+using D2.Infrastructure;
 using D2.Staging.WebApi.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,10 @@ try
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .ProducesProblem(StatusCodes.Status500InternalServerError);
 
+    var dbInit = app.Services.GetRequiredService<DbInitializer>();
+    await dbInit.Initialize();
+    Console.WriteLine("Database initialized.");
+    
     app.Run();
 }
 catch (Exception ex)

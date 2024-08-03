@@ -1,4 +1,6 @@
-﻿namespace D2.Staging.WebApi.Extensions;
+﻿using D2.Infrastructure;
+
+namespace D2.Staging.WebApi.Extensions;
 
 public static class Destiny2ApplicationBuilder
 {
@@ -7,6 +9,7 @@ public static class Destiny2ApplicationBuilder
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddOpenTelemetryConfiguration(builder);
+        builder.Services.AddInfrastructure(builder.Configuration);
 
         builder.Services.AddAuthorization();
         builder.Services.AddEndpointsApiExplorer();
