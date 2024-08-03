@@ -5,28 +5,21 @@ public static class Destiny2ApplicationBuilder
     public static WebApplicationBuilder CreateBuilder(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
+
         builder.Services.AddOpenTelemetryConfiguration(builder);
-        
+
         builder.Services.AddAuthorization();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerConfiguration();
         return builder;
     }
-    
+
     public static WebApplication BuildDestiny2(this WebApplicationBuilder builder)
     {
         var app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
+        app.UseSwaggerConfiguration();
         app.UseAuthorization();
-        
+
         return app;
     }
 }
-
