@@ -4,7 +4,10 @@ public static class Destiny2ApplicationBuilder
 {
     public static WebApplicationBuilder CreateBuilder(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args); 
+        var builder = WebApplication.CreateBuilder(args);
+        
+        builder.Services.AddOpenTelemetryConfiguration(builder);
+        
         builder.Services.AddAuthorization();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -22,9 +25,8 @@ public static class Destiny2ApplicationBuilder
         }
 
         app.UseAuthorization();
-
-        app.Run();
         
         return app;
     }
 }
+

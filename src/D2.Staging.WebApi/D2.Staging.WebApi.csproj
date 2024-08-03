@@ -5,11 +5,25 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>f4219eb7-2970-453b-9af3-9d56e1c184b5</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
+        <PackageReference Include="Microsoft.NET.Build.Containers" Version="8.0.303" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta.12" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\test\D2.Tests.Staging\D2.Tests.Staging.csproj" />
+      <ProjectReference Include="..\D2.Application\D2.Application.csproj" />
+      <ProjectReference Include="..\D2.Infrastructure\D2.Infrastructure.csproj" />
+      <ProjectReference Include="..\D2.Kernel\D2.Kernel.csproj" />
     </ItemGroup>
 
 </Project>
