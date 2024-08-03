@@ -1,19 +1,18 @@
-var builder = WebApplication.CreateBuilder(args); 
+using D2.Staging.WebApi.Extensions;
 
-
-builder.Services.AddAuthorization();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var builder = Destiny2ApplicationBuilder.CreateBuilder(args);
+    var app = builder.BuildDestiny2();
+    app.Run();
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
+finally
+{
+    Console.WriteLine("Application has exited.");
 }
 
-app.UseAuthorization();
 
-app.Run();
