@@ -18,4 +18,8 @@
       <Folder Include="Repositories\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\D2.Application\D2.Application.csproj" />
+    </ItemGroup>
+
 </Project>
