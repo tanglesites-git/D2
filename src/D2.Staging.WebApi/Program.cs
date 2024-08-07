@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using D2.Infrastructure.Contexts;
 using D2.Staging.WebApi.Extensions;
 
@@ -17,7 +18,12 @@ try
         .ProducesProblem(StatusCodes.Status500InternalServerError);
 
     var dbInit = app.Services.GetRequiredService<DbInitializer>();
+    var start = Stopwatch.GetTimestamp();
     await dbInit.Initialize();
+    var end = Stopwatch.GetTimestamp();
+    var diff = Stopwatch.GetElapsedTime(start, end);
+    Console.WriteLine($"Database initialized in {diff}ms.");
+
     Console.WriteLine("Database initialized.");
     
     app.Run();

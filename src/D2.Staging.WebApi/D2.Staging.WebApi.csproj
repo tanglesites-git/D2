@@ -27,4 +27,8 @@
       <ProjectReference Include="..\D2.Kernel\D2.Kernel.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Endpoints\" />
+    </ItemGroup>
+
 </Project>

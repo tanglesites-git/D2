@@ -22,6 +22,21 @@ from DestinyInventoryItemDefinition
 where json -> 'inventory' ->> 'tierTypeName' is not null
 order by ItemType;
 
+-- Get All Weapons
+select json -> 'hash'                                as Id,
+       json -> 'displayProperties' ->> 'name'        as Name,
+       json -> 'displayProperties' ->> 'description' as Description,
+       json -> 'displayProperties' ->> 'icon'        as Icon,
+       json -> 'itemTypeDisplayName'                 as DisplayName,
+       json -> 'inventory' -> 'tierTypeName'         as TierType,
+       json -> 'itemType'                            as ItemType,
+       json -> 'itemSubType'                         as ItemSubType,
+       json -> 'loreHash'                            as LoreId,
+       json -> 'defaultDamageTypeHash'               as DamageTypeId
+from DestinyInventoryItemDefinition
+where json -> 'itemType' = 3
+order by ItemType;
+
 -- Get All Damage Types
 
 select json -> 'hash'                                as Id,
@@ -63,83 +78,27 @@ where json -> 'displayProperties' ->> 'name' != ""
   and json -> 'displayProperties' ->> 'description' != "";
 
 
--- Perks
+-- Sockets
 
-with cte as (select json -> 'hash'                                as Id,
-                    json -> 'displayProperties' ->> 'name'        as Name,
-                    json -> 'displayProperties' ->> 'description' as Description,
-                    json -> 'displayProperties' ->> 'icon'        as Icon,
-                    json ->> 'itemTypeDisplayName'                as DisplayName,
-                    json -> 'inventory' ->> 'tierTypeName'        as TierType
-             from DestinyInventoryItemDefinition
-             where json -> 'inventory' ->> 'tierTypeName' is not null
-             order by DisplayName)
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Scope'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Magazine'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Stock'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Launcher Barrel'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Grip'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Trait'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Blade'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Enhanced Trait'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Origin Trait'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Intrinsic'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Enhanced Intrinsic'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Guard'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Battery'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Stock'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Bowstring'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Haft'
-union
-select Id, Name, DisplayName, TierType, Description
-from cte
-where DisplayName = 'Arrow'
-group by DisplayName, Id, Name
-order by DisplayName;
+select json -> 'hash'                                as Id,
+       json -> 'displayProperties' ->> 'name'        as Name,
+       json -> 'displayProperties' ->> 'description' as Description,
+       json -> 'displayProperties' ->> 'icon'        as Icon,
+       json ->> 'itemTypeDisplayName'                as DisplayName,
+       json -> 'inventory' ->> 'tierTypeName'        as TierType
+from DestinyInventoryItemDefinition
+where json ->> 'itemTypeDisplayName' = 'Armor'
+   or json ->> 'itemTypeDisplayName' = 'Battery'
+   or json ->> 'itemTypeDisplayName' = 'Blade'
+   or json ->> 'itemTypeDisplayName' = 'Bowstring'
+   or json ->> 'itemTypeDisplayName' = 'Enhanced Intrinsic'
+   or json ->> 'itemTypeDisplayName' = 'Enhanced Trait'
+   or json ->> 'itemTypeDisplayName' = 'Grip'
+   or json ->> 'itemTypeDisplayName' = 'Guard'
+   or json ->> 'itemTypeDisplayName' = 'Haft'
+   or json ->> 'itemTypeDisplayName' = 'Intrinsic'
+   or json ->> 'itemTypeDisplayName' = 'Launcher Barrel'
+   or json ->> 'itemTypeDisplayName' = 'Magazine'
+   or json ->> 'itemTypeDisplayName' = 'Origin Trait'
+   or json ->> 'itemTypeDisplayName' = 'Scope'
+   or json ->> 'itemTypeDisplayName' = 'Trait'

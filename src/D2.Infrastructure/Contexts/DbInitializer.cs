@@ -1,9 +1,9 @@
 ﻿using System.Data;
+using System.Diagnostics;
 using D2.Application.DTO;
 using D2.Infrastructure.Contexts.SqlQueries.PostgreSql;
 using D2.Infrastructure.Contexts.SqlQueries.SqliteQueries;
 using Dapper;
-using Socket = System.Net.Sockets.Socket;
 
 namespace D2.Infrastructure.Contexts
 {
@@ -24,22 +24,50 @@ namespace D2.Infrastructure.Contexts
             // Create Tables
             var npgsqlConnection = await _connectionFactory.CreateConnection();
             var sqliteConnection = await _connectionFactorySqlite.CreateConnection();
+            var startCreateSeedTables = Stopwatch.GetTimestamp();
             await CreateSeedTables(npgsqlConnection);
+            var endCreateSeedTables = Stopwatch.GetTimestamp();
+
+            var startDamageTypes = Stopwatch.GetTimestamp();
             await AddType<DamageTypeEntity>(sqliteConnection, npgsqlConnection, SelectQueries.DamageTypes,
                 InsertQueries.InsertDamageTypes);
+            var endDamageTypes = Stopwatch.GetTimestamp();
+            
+            var startLore = Stopwatch.GetTimestamp();
             await AddType<LoreEntity>(sqliteConnection, npgsqlConnection, SelectQueries.Lore, InsertQueries.InsertLore);
+            var endLore = Stopwatch.GetTimestamp();
+            
+            var startSocketCategories = Stopwatch.GetTimestamp();
             await AddType<SocketCategory>(sqliteConnection, npgsqlConnection, SelectQueries.SocketCategories,
                 InsertQueries.InsertSocketCategories);
+            var endSocketCategories = Stopwatch.GetTimestamp();
+            
+            var startSockets = Stopwatch.GetTimestamp();
             await AddType<Socket>(sqliteConnection, npgsqlConnection, SelectQueries.Sockets, InsertQueries.InsertSockets);
+            var endSockets = Stopwatch.GetTimestamp();
+            
+            var startStatDefinitions = Stopwatch.GetTimestamp();
             await AddType<StatDefinition>(sqliteConnection, npgsqlConnection, SelectQueries.StatDefinitions,
                 InsertQueries.InsertStatDefinitions);
-            await AddType<ItemDefinition>(sqliteConnection, npgsqlConnection, SelectQueries.SelectItemDefinitions,
+            var endStatDefinitions = Stopwatch.GetTimestamp();
+            
+            var startItemDefinitions = Stopwatch.GetTimestamp();
+            await AddType<ItemDefinition>(sqliteConnection, npgsqlConnection, SelectQueries.SelectWeapons,
                 InsertQueries.InsertItemDefinitions);
+            var endItemDefinitions = Stopwatch.GetTimestamp();
+            
+            Console.WriteLine($"Create Seed Tables: {Stopwatch.GetElapsedTime(startCreateSeedTables, endCreateSeedTables)}ms");
+            Console.WriteLine($"Damage Types: {Stopwatch.GetElapsedTime(startDamageTypes, endDamageTypes)}ms");
+            Console.WriteLine($"Lore: {Stopwatch.GetElapsedTime(startLore, endLore)}ms");
+            Console.WriteLine($"Socket Categories: {Stopwatch.GetElapsedTime(startSocketCategories, endSocketCategories)}ms");
+            Console.WriteLine($"Sockets: {Stopwatch.GetElapsedTime(startSockets, endSockets)}ms");
+            Console.WriteLine($"Stat Definitions: {Stopwatch.GetElapsedTime(startStatDefinitions, endStatDefinitions)}ms");
+            Console.WriteLine($"Item Definitions: {Stopwatch.GetElapsedTime(startItemDefinitions, endItemDefinitions)}ms");
         }
 
         private static async Task CreateSeedTables(IDbConnection connection)
         {
-            using var transaction = connection.BeginTransaction();
+            var transaction = connection.BeginTransaction();
             try
             {
                 await connection.ExecuteAsync(CreateTables.DropAllTables, transaction);
